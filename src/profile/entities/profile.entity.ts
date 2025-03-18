@@ -4,7 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Profile {
@@ -31,4 +34,8 @@ export class Profile {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToOne(() => User, (user) => user.profile)
+  @JoinColumn()
+  user: User;
 }

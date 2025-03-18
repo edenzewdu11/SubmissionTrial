@@ -21,7 +21,7 @@ import { Profile } from './profile/entities/profile.entity';
       username: process.env.DB_USERNAME,
       password: String(process.env.DB_PASSWORD),
       database: process.env.DB_NAME,
-      // autoLoadEntities: true,
+      autoLoadEntities: true,
 
       entities: [User, Feedback, Idea, Profile],
       synchronize: true,
