@@ -9,23 +9,28 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { Feedback } from './feedback/entities/feedback.entity';
 import { Idea } from './ideas/entities/ideas.entity';
+import { ProfileModule } from './profile/profile.module';
+import { Profile } from './profile/entities/profile.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'dere2010',
-      database: 'Think-tank',
-      entities: [User, Feedback, Idea],
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: String(process.env.DB_PASSWORD),
+      database: process.env.DB_NAME,
+      // autoLoadEntities: true,
+
+      entities: [User, Feedback, Idea, Profile],
       synchronize: true,
     }),
     AuthModule,
     UsersModule,
     FeedbackModule,
     IdeasModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
