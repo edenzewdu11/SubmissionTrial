@@ -5,9 +5,28 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { IdeasModule } from './ideas/ideas.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './users/entities/user.entity';
+import { Feedback } from './feedback/entities/feedback.entity';
+import { Idea } from './ideas/entities/ideas.entity';
 
 @Module({
-  imports: [AuthModule, UsersModule, FeedbackModule, IdeasModule],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'dere2010',
+      database: 'Think-tank',
+      entities: [User, Feedback, Idea],
+      synchronize: true,
+    }),
+    AuthModule,
+    UsersModule,
+    FeedbackModule,
+    IdeasModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
