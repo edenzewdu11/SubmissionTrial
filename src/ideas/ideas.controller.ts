@@ -7,14 +7,16 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { IdeasService } from './ideas.service';
+import { CreateIdeaDto } from './dtos/create-idea.dto';
 
 @Controller('ideas')
 export class IdeasController {
   constructor(private readonly ideasService: IdeasService) {}
 
+  // Using CreateIdeaDto for proper validation and type safety
   @Post()
-  async createIdea(@Body() ideaDto: any) {
-    return this.ideasService.createIdea(ideaDto);
+  async createIdea(@Body() createIdeaDto: CreateIdeaDto) {
+    return this.ideasService.createIdea(createIdeaDto); // Pass the DTO to the service
   }
 
   @Get(':id')

@@ -7,12 +7,12 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto {
-  @IsString({ message: ' name should be a string ' })
-  @IsNotEmpty({ message: 'name cannot be an empty' })
+  @IsString({ message: ' firstname should be a string ' })
+  @IsNotEmpty({ message: 'firstname cannot be an empty' })
   firstName: string;
 
-  @IsString({ message: ' name should be a string' })
-  @IsNotEmpty({ message: 'name cannot be an empty' })
+  @IsString({ message: ' lastname should be a string' })
+  @IsNotEmpty({ message: 'lastname cannot be an empty' })
   lastName: string;
 
   @IsEmail()

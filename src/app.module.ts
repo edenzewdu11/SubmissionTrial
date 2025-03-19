@@ -16,15 +16,14 @@ import { Profile } from './profile/entities/profile.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USERNAME,
-      password: String(process.env.DB_PASSWORD),
-      database: process.env.DB_NAME,
-      autoLoadEntities: true,
-
-      entities: [User, Feedback, Idea, Profile],
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'dere2010',
+      database: 'Think-Tank',
       synchronize: true,
+      entities: [User, Feedback, Idea, Profile],
+      autoLoadEntities: true,
     }),
     AuthModule,
     UsersModule,

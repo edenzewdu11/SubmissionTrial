@@ -41,11 +41,14 @@ export class User {
   @OneToMany(() => Feedback, (feedback) => feedback.admin)
   feedbacks: Feedback[];
 
-  @OneToOne(() => Profile, (profile) => profile.user) // Add this line for the inverse relationship
+  @OneToOne(() => Profile, (profile) => profile.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   profile: Profile;
 
   @CreateDateColumn()
-  createdAt: Date; // Fixed the inconsistency
+  createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
@@ -53,7 +56,6 @@ export class User {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  // Hook to hash password before saving to DB
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {

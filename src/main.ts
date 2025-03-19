@@ -13,6 +13,6 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  await app.listen(process.env.PORT ?? 3444); // Listen on port from .env or default 3444
+  await app.listen(process.env.PORT ?? 1944); // Listen on port from .env or default 3444
 }
 bootstrap();

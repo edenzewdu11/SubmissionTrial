@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Idea } from './entities/ideas.entity';
+import { CreateIdeaDto } from './dtos/create-idea.dto';
 
 @Injectable()
 export class IdeasService {
@@ -9,14 +10,14 @@ export class IdeasService {
     @InjectRepository(Idea) private readonly ideaRepo: Repository<Idea>,
   ) {}
 
-  async createIdea(ideaDto: any) {
+  async createIdea(createIdeaDto: CreateIdeaDto): Promise<Idea> {
     return this.ideaRepo.save({
-      ...ideaDto,
+      ...createIdeaDto,
       status: 'Pending',
     });
   }
 
-  async getIdeaById(id: number) {
+  async getIdeaById(id: number): Promise<Idea> {
     const idea = await this.ideaRepo.findOne({
       where: { id },
     });
