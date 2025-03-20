@@ -50,7 +50,6 @@ export class UsersService {
   async updateUser(id: number, updateData: UpdateUserDto): Promise<User> {
     const user = await this.getUserById(id);
 
-    // Check if any user profile fields need to be updated
     if (updateData.firstName || updateData.lastName) {
       const updatedFullName = `${updateData.firstName ?? user.profile.fullName.split(' ')[0]} ${updateData.lastName ?? user.profile.fullName.split(' ')[1]}`;
       await this.profileRepo.update(user.profile.id, {
@@ -58,7 +57,6 @@ export class UsersService {
       });
     }
 
-    // Update other user fields
     if (updateData.email) {
       await this.profileRepo.update(user.profile.id, {
         email: updateData.email,
