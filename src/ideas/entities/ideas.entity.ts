@@ -9,6 +9,13 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
+export enum IdeaStatus {
+  Pending = 'Pending',
+  Reviewed = 'Reviewed',
+  Approved = 'Approved',
+  Rejected = 'Rejected',
+}
+
 @Entity()
 export class Idea {
   @PrimaryGeneratedColumn()
@@ -25,10 +32,10 @@ export class Idea {
 
   @Column({
     type: 'enum',
-    enum: ['Pending', 'Reviewed', 'Approved', 'Rejected'],
-    default: 'Pending',
+    enum: IdeaStatus,
+    default: IdeaStatus.Pending,
   })
-  status: string;
+  status: IdeaStatus;
 
   @CreateDateColumn()
   createdAt: Date;
