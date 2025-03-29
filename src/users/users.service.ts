@@ -31,10 +31,11 @@ export class UsersService {
     return this.userRepo.save(user);
   }
 
+  // Adjusted findByEmail method to directly query User's email
   async findByEmail(email: string): Promise<User | undefined> {
     return this.userRepo.findOne({
-      where: { profile: { email } },
-      relations: ['profile'],
+      where: { email }, // Directly query email from the User entity
+      relations: ['profile'], // Still load the profile for related data
     });
   }
 
@@ -79,7 +80,6 @@ export class UsersService {
     }
 
     await this.profileRepo.remove(user.profile);
-
     await this.userRepo.remove(user);
   }
 

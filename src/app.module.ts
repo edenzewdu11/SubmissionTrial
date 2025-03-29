@@ -11,6 +11,7 @@ import { Feedback } from './feedback/entities/feedback.entity';
 import { Idea } from './ideas/entities/ideas.entity';
 import { ProfileModule } from './profile/profile.module';
 import { Profile } from './profile/entities/profile.entity';
+import { profile } from 'console';
 
 @Module({
   imports: [
@@ -25,6 +26,9 @@ import { Profile } from './profile/entities/profile.entity';
       entities: [User, Feedback, Idea, Profile],
       autoLoadEntities: true,
     }),
+
+    TypeOrmModule.forFeature([User, Feedback, Idea, Profile]), // Import the entities here
+
     AuthModule,
     UsersModule,
     FeedbackModule,

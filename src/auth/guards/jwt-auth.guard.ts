@@ -7,7 +7,6 @@ import { UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
 export class JwtAuthGuard extends PassportStrategy(Strategy) {
-  // Use PassportStrategy and pass Strategy from passport-jwt
   constructor(private readonly usersService: UsersService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extract token from Authorization header
@@ -15,14 +14,16 @@ export class JwtAuthGuard extends PassportStrategy(Strategy) {
     });
   }
 
+  // This method validates the JWT token and attaches the user to the request
   async validate(payload: JwtPayload) {
-    // Use the payload to find the user
+    // Use the payload to find the user by the ID
     const user = await this.usersService.getUserById(payload.sub);
 
     if (!user) {
       throw new UnauthorizedException('User not found or invalid token');
     }
 
-    return user; // Attach user to the request (req.user)
+    // The user is returned here, and it will automatically be attached to req.user
+    return user;
   }
 }
