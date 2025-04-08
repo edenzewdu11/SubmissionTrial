@@ -76,10 +76,13 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    await this.profileRepo.remove(user.profile);
+    if (user.profile) {
+      await this.profileRepo.remove(user.profile);
+    }
+
     await this.userRepo.remove(user);
   }
 
