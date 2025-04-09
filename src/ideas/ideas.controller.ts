@@ -15,6 +15,7 @@ import { CreateIdeaDto } from './dtos/create-idea.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { AuthGuard } from '@nestjs/passport'; // Make sure this import exists
 
 @Controller('ideas')
 export class IdeasController {
@@ -22,7 +23,7 @@ export class IdeasController {
 
   // Create Idea - Only 'user' role allowed
   @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('user')
   async createIdea(@Body() createIdeaDto: CreateIdeaDto, @Request() req) {
     const userId = req.user.id; // Extract userId from request

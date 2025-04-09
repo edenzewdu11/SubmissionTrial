@@ -10,9 +10,15 @@ import {
 import { User } from '../../users/entities/user.entity';
 import { Idea } from '../../ideas/entities/ideas.entity';
 
+export enum FeedbackStatus {
+  Reviewed = 'Reviewed',
+  Approved = 'Approved',
+  Rejected = 'Rejected',
+}
+
 @Entity()
 export class Feedback {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn() // <----- THIS LINE WAS MISSING IN YOUR LAST SNIPPET
   id: number;
 
   @Column('text')
@@ -26,10 +32,10 @@ export class Feedback {
 
   @Column({
     type: 'enum',
-    enum: ['Reviewed', 'Approved', 'Rejected'],
-    default: 'Reviewed',
+    enum: FeedbackStatus,
+    default: FeedbackStatus.Reviewed,
   })
-  status: string;
+  status: FeedbackStatus;
 
   @CreateDateColumn()
   createdAt: Date;

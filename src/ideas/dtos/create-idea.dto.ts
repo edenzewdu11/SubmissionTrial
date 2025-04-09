@@ -1,14 +1,13 @@
-import { IsString, IsInt, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsNotEmpty } from 'class-validator';
 
 export class CreateIdeaDto {
+  @IsNotEmpty()
   @IsString()
   title: string;
 
+  @IsNotEmpty()
   @IsString()
   description: string;
-
-  @IsInt()
-  userId: number;
 
   @IsOptional()
   @IsString()
