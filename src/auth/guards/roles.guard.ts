@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
 import {
+  Injectable,
   CanActivate,
   ExecutionContext,
   ForbiddenException,
@@ -15,25 +15,44 @@ export class RolesGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    // Get the required roles from the handler's metadata
     const requiredRoles = this.reflector.get<string[]>(
       ROLES_KEY,
       context.getHandler(),
     );
+    console.log('Required Roles:', requiredRoles); // Debugging
+
     if (!requiredRoles) {
       return true; // No roles required, proceed
     }
 
     const request = context.switchToHttp().getRequest();
     const user = request.user;
+    console.log('User in RolesGuard:', user); // Debugging
 
-    // Check if the user exists and has a role
-    if (!user || !user.role) {
+    if (!user) {
+      console.error('User object not found on request in RolesGuard');
+      throw new ForbiddenException('User not authenticated');
+    }
+
+    if (!user.role) {
+      console.error(
+        'User role property not found on request.user in RolesGuard:',
+        user,
+      );
       throw new ForbiddenException('User role not found');
     }
 
-    // Check if the user has at least one of the required roles
-    const hasRole = requiredRoles.some((role) => user.role.includes(role));
+    const hasRole = requiredRoles.some((role) => {
+      if (typeof user.role === 'string') {
+        return user.role === role; // Exact string match for single role
+      } else if (Array.isArray(user.role)) {
+        return user.role.includes(role); // Check if the required role is in the array
+      }
+      return false; // Role is neither string nor array, deny access
+    });
+    console.log('User Role:', user.role); // Debugging
+    console.log('Has Required Role:', hasRole); // Debugging
+
     if (!hasRole) {
       throw new ForbiddenException(
         'You do not have permission to access this resource',

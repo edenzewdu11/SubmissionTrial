@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport'; // Use PassportStrategy from @nestjs/passport
-import { ExtractJwt, Strategy } from 'passport-jwt'; // Import Strategy from passport-jwt directly
-import { JwtPayload } from '../interfaces/jwt-payload.interface'; // Import your JwtPayload interface
-import { UsersService } from '../../users/users.service'; // Import UsersService
+import { PassportStrategy } from '@nestjs/passport'; // PassportStrategy from @nestjs/passport
+import { ExtractJwt, Strategy } from 'passport-jwt'; // ExtractJwt from passport-jwt
+import { JwtPayload } from '../interfaces/jwt-payload.interface'; // Your JwtPayload interface
+import { UsersService } from '../../users/users.service'; // UsersService for user lookup
 import { UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
@@ -14,16 +14,16 @@ export class JwtAuthGuard extends PassportStrategy(Strategy) {
     });
   }
 
-  // This method validates the JWT token and attaches the user to the request
   async validate(payload: JwtPayload) {
-    // Use the payload to find the user by the ID
+    console.log('JwtAuthGuard - validate method called!');
     const user = await this.usersService.getUserById(payload.sub);
 
     if (!user) {
       throw new UnauthorizedException('User not found or invalid token');
     }
 
-    // The user is returned here, and it will automatically be attached to req.user
-    return user;
+    console.log('User from validate method:', user);
+
+    return { id: user.id, role: user.role, email: user.email };
   }
 }

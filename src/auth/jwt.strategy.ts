@@ -1,19 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+  // 👈 give it name 'jwt'
+  constructor(private readonly usersService: UsersService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extract token from Authorization header
-      ignoreExpiration: false, // Ensure token expiration is enforced
-      secretOrKey: 'mystrongsecretkey', // 🔒 Hardcoded secret key
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: 'mystrongsecretkey',
     });
   }
 
-  async validate(payload: any) {
-    // Validate the JWT payload and return user details (customize as needed)
-    return { userId: payload.sub, username: payload.username };
+  async validate(payload: JwtPayload) {
+    console.log('JwtStrategy - validate method called!');
+    const user = await this.usersService.getUserById(payload.sub);
+
+    if (!user) {
+      throw new UnauthorizedException('User not found or invalid token');
+    }
+
+    console.log('User from validate method:', user);
+
+    return { id: user.id, role: user.role, email: user.email };
   }
 }

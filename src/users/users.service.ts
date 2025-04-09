@@ -17,8 +17,12 @@ export class UsersService {
     @InjectRepository(Profile) private profileRepo: Repository<Profile>,
   ) {}
 
+  // Create user and include the role
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const user = this.userRepo.create(createUserDto);
+
+    // Ensure the role is set, defaulting to 'user' if not provided
+    user.role = createUserDto.role || 'user'; // Default to 'user' if no role is provided
 
     const profile = this.profileRepo.create({
       fullName: `${createUserDto.firstName} ${createUserDto.lastName}`,
@@ -62,6 +66,10 @@ export class UsersService {
       await this.profileRepo.update(user.profile.id, {
         email: updateData.email,
       });
+    }
+
+    if (updateData.role) {
+      user.role = updateData.role; // Ensure the role can be updated
     }
 
     await this.userRepo.update(id, updateData);

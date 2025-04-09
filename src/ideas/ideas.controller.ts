@@ -18,28 +18,30 @@ import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('ideas')
 export class IdeasController {
-  constructor(private readonly ideasService: IdeasService) {} // ✅ fixed here
+  constructor(private readonly ideasService: IdeasService) {}
 
   // Create Idea - Only 'user' role allowed
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('user')
   async createIdea(@Body() createIdeaDto: CreateIdeaDto, @Request() req) {
-    const userId = req.user.id;
+    const userId = req.user.id; // Extract userId from request
     return this.ideasService.createIdea(createIdeaDto, userId);
   }
 
   // Get Idea by ID
   @Get(':id')
   async getIdea(@Param('id', ParseIntPipe) id: number) {
-    return this.ideasService.getIdeaById(id); // ✅ fixed here
+    return this.ideasService.getIdeaById(id);
   }
 
+  // Get all public (approved) ideas
   @Get('/public')
   async getPublicIdeas() {
     return this.ideasService.getApprovedIdeas();
   }
 
+  // Approve Idea - Only 'admin' role allowed
   @Patch(':id/approve')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
