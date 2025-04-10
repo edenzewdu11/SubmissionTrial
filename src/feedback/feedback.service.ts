@@ -5,7 +5,7 @@ import { Feedback } from './entities/feedback.entity';
 import { IdeasService } from '../ideas/ideas.service';
 import { CreateFeedbackDto } from './dtos/create-feedback-dto';
 import { UpdateFeedbackDto } from './dtos/update-feedback-dto';
-import { FeedbackStatus } from './entities/feedback.entity'; // Make sure this import is correct
+import { FeedbackStatus } from './entities/feedback.entity';
 
 @Injectable()
 export class FeedbackService {
@@ -26,7 +26,7 @@ export class FeedbackService {
       ...createFeedbackDto,
       admin: { id: adminId },
       idea: { id: createFeedbackDto.ideaId },
-      status: createFeedbackDto.status || FeedbackStatus.Reviewed, // Ensure 'Reviewed' matches enum value
+      status: createFeedbackDto.status, // Use the status directly from the DTO
     });
 
     return this.feedbackRepo.save(feedback);
@@ -41,7 +41,7 @@ export class FeedbackService {
 
   async getFeedbackById(id: number): Promise<Feedback> {
     const feedback = await this.feedbackRepo.findOne({
-      where: { id: { $eq: id } } as any, // Try this explicit syntax and type casting
+      where: { id }, // Use shorthand for where clause
       relations: ['admin', 'idea'],
       withDeleted: false,
     });
@@ -56,8 +56,8 @@ export class FeedbackService {
     updateFeedbackDto: UpdateFeedbackDto,
   ): Promise<Feedback> {
     const feedback = await this.feedbackRepo.findOne({
-      where: { id: { $eq: id } } as any,
-    }); // Try this
+      where: { id }, // Use shorthand for where clause
+    });
     if (!feedback) {
       throw new NotFoundException(`Feedback with ID ${id} not found`);
     }
@@ -68,13 +68,14 @@ export class FeedbackService {
 
   async deleteFeedback(id: number): Promise<void> {
     const feedback = await this.feedbackRepo.findOne({
-      where: { id: { $eq: id } } as any,
-    }); // Try this
+      where: { id }, // Use shorthand for where clause
+    });
     if (!feedback) {
       throw new NotFoundException(`Feedback with ID ${id} not found`);
     }
     await this.feedbackRepo.softDelete(id);
   }
+
   async getFeedbackByIdeaId(ideaId: number): Promise<Feedback[]> {
     return this.feedbackRepo.find({ where: { idea: { id: ideaId } } });
   }

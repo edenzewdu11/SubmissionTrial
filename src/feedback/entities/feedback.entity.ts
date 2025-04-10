@@ -18,7 +18,7 @@ export enum FeedbackStatus {
 
 @Entity()
 export class Feedback {
-  @PrimaryGeneratedColumn() // <----- THIS LINE WAS MISSING IN YOUR LAST SNIPPET
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column('text')

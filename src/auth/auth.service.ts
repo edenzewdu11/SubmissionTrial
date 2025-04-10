@@ -34,6 +34,7 @@ export class AuthService {
       const newUser = await this.usersService.createUser({
         ...createUserDto,
         password: hashedPassword,
+        role: createUserDto.role || 'user', // Default role to 'user' if not provided
       });
 
       const { password, ...userWithoutPassword } = newUser;
@@ -61,10 +62,10 @@ export class AuthService {
         throw new UnauthorizedException('Invalid credentials');
       }
 
-      // ✅ Include sub, username, and role in JWT payload
+      // ✅ Include sub, email, and role in JWT payload
       const payload = {
         sub: user.id,
-        email: user.email, // or user.email if username is not used
+        email: user.email,
         role: user.role,
       };
 
