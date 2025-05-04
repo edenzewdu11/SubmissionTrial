@@ -34,14 +34,17 @@ export class AuthService {
       const newUser = await this.usersService.createUser({
         ...createUserDto,
         password: hashedPassword,
-        role: createUserDto.role || 'user', // Default role to 'user' if not provided
+        role: createUserDto.role || 'user',
       });
 
       const { password, ...userWithoutPassword } = newUser;
       return userWithoutPassword;
     } catch (error) {
       console.error('Registration Error:', error);
-      throw error;
+      if (error instanceof ConflictException) {
+        throw new ConflictException('Email already in use');
+      }
+      throw new Error('An error occurred while registering the user');
     }
   }
 

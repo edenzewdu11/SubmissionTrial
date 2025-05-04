@@ -25,5 +25,5 @@ export class CreateUserDto {
 
   @IsEnum(['user', 'admin'])
   @IsNotEmpty({ message: 'specify your role please' })
-  role: string;
+  role?: string;
 }

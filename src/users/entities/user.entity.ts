@@ -30,7 +30,7 @@ export class User {
   password: string; // Store the already hashed password here
 
   @Column({ type: 'enum', enum: ['user', 'admin'], default: 'user' })
-  role: string;
+  role?: string;
 
   @OneToMany(() => Idea, (idea) => idea.user)
   ideas: Idea[];
