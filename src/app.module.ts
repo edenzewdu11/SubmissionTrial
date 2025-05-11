@@ -20,7 +20,7 @@ import { profile } from 'console';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'dere2010',
+      password: 'eden111310',
       database: 'Think-Tank',
       synchronize: true,
       entities: [User, Feedback, Idea, Profile],

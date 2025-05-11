@@ -12,6 +12,7 @@ import { User } from '../users/entities/user.entity';
 import { CreateIdeaDto } from './dtos/create-idea.dto';
 import { IdeaStatus } from './entities/ideas.entity';
 import { UpdateIdeaDto } from './dtos/update-idea.dto';
+import{ FeedbackStatus } from '../feedback/entities/feedback.entity';
 
 @Injectable()
 export class IdeasService {
@@ -48,9 +49,26 @@ export class IdeasService {
     });
   }
 
-  async getApprovedIdeas(): Promise<Idea[]> {
+  // async getApprovedIdeas(): Promise<Idea[]> {
+  //   return this.ideaRepo.find({
+  //     where: { status: IdeaStatus.Approved },
+  //     relations: ['user'],
+  //     order: { createdAt: 'DESC' },
+  //   });
+  // }
+
+  async getIdeasWithApprovedFeedback(): Promise<Idea[]> {
+    return this.ideaRepo
+      .createQueryBuilder('idea')
+      .leftJoinAndSelect('idea.feedback', 'feedback')
+      .leftJoinAndSelect('idea.user', 'user')
+      .where('feedback.status = :status', { status: FeedbackStatus.Approved })
+      .andWhere('feedback.deletedAt IS NULL')  // Only get non-deleted feedback
+      .orderBy('idea.createdAt', 'DESC')
+      .getMany();
+}
+  async getAllIdeas(): Promise<Idea[]> {
     return this.ideaRepo.find({
-      where: { status: IdeaStatus.Approved },
       relations: ['user'],
       order: { createdAt: 'DESC' },
     });

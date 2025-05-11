@@ -3,11 +3,13 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
+import { Feedback } from '../../feedback/entities/feedback.entity';
 
 export enum IdeaStatus {
   Pending = 'Pending',
@@ -29,6 +31,9 @@ export class Idea {
 
   @ManyToOne(() => User, (user) => user.ideas)
   user: User;
+
+  @OneToMany(() => Feedback, (feedback) => feedback.idea)
+  feedback: Feedback[];
 
   @Column({
     type: 'enum',

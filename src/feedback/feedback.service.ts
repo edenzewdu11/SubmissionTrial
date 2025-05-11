@@ -39,6 +39,7 @@ export class FeedbackService {
     });
   }
 
+
   async getFeedbackById(id: number): Promise<Feedback> {
     const feedback = await this.feedbackRepo.findOne({
       where: { id }, // Use shorthand for where clause
